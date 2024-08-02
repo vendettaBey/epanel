@@ -13,13 +13,14 @@ class ServicesController extends Controller
     {
         $services = Services::all();
         $sectors = Sector::all();
-        return view('backend.services.index',compact('services','sectors'));
+        return view('backend.services.index', compact('services', 'sectors'));
     }
 
 
     public function create()
     {
-        return view('backend.services.create');
+        $sectors = Sector::all();
+        return view('backend.services.create', compact('sectors'));
     }
 
 
