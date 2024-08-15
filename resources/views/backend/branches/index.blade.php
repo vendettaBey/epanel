@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Sektörler')
+@section('title', 'Şubeler')
 
 @section('content')
     <div class="container-fluid">
@@ -8,9 +8,9 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">Sektörler</h3>
-                        <a href="{{ route('sectors.create') }}"><button type="button" class="btn btn-primary float-end">Yeni
-                                Sektör Ekle</button></a>
+                        <h3 class="card-title">Şubeler</h3>
+                        <a href="{{ route('branches.create') }}"><button type="button" class="btn btn-primary float-end">Yeni
+                                Şube Ekle</button></a>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -19,30 +19,38 @@
                                     <tr>
                                         <th>ID</th>
                                         <th>Adı</th>
-                                        <th>Açıklama</th>
+                                        <th>Adres</th>
+                                        <th>Telefon</th>
+                                        <th>Email</th>
                                         <th>Durum</th>
+                                        <th>Görsel</th>
                                         <th>İşlemler</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($sectors as $sector)
+                                    @foreach ($branches as $branch)
                                         <tr>
-                                            <td>{{ $sector->id }}</td>
-                                            <td>{{ $sector->name }}</td>
-                                            <td>{!! $sector->description !!}</td>
+                                            <td>{{ $branch->id }}</td>
+                                            <td>{{ $branch->name }}</td>
+                                            <td>{!! $branch->address !!}</td>
+                                            <td>{{ $branch->phone }}</td>
+                                            <td>{{ $branch->email }}</td>
                                             <td>
-                                                @if ($sector->status == 1)
+                                                @if($branch->status == 1)
                                                     <span class="badge bg-success">Aktif</span>
                                                 @else
                                                     <span class="badge bg-danger">Pasif</span>
                                                 @endif
                                             </td>
                                             <td>
-                                                <a href="{{ route('sectors.edit', $sector->id) }}"><button type="button"
+                                                <img src="{{ $branch->image }}" alt="{{ $branch->name }}">
+                                            </td>
+                                            <td>
+                                                <a href="{{ route('branches.edit', $branch->id) }}"><button type="button"
                                                         class="btn btn-primary btn-sm">Düzenle</button></a>
-                                                <button type="button" class="btn btn-danger btn-sm" onclick="deleteSector({{ $sector->id }})">Sil</button>
-                                                <a href="{{ route('sectors.status', $sector->id) }}"><button type="button"
-                                                        class="btn @if($sector->status == 1)btn-danger @else btn-success @endif btn-sm">@if($sector->status == 1)Pasif @else Aktif @endif</button></a>
+                                                <button type="button" class="btn btn-danger btn-sm" onclick="deleteBranch({{ $branch->id }})">Sil</button>
+                                                <a href="{{ route('branches.status', $branch->id) }}"><button type="button"
+                                                        class="btn @if($branch->status == 1)btn-danger @else btn-success @endif btn-sm">@if($branch->status == 1)Pasif @else Aktif @endif</button></a>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -60,10 +68,10 @@
 @section('scripts')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        function deleteSector(sectorId) {
+        function deleteBranch(branchId) {
             Swal.fire({
-                title: 'Silmek istediğinize emin misiniz?',
-                text: "Bu işlemi geri alamazsınız! Bu sektöre ait hizmetlerde silinecektir.",
+                title: 'Şubeyi silmek istediğinize emin misiniz?',
+                text: "Bu işlemi geri alamazsınız!",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -72,7 +80,7 @@
                 cancelButtonText: 'Vazgeç'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = '/sectors/destroy/' + sectorId;
+                    window.location.href = '/branches/destroy/' + branchId;
                 }
             })
         }
@@ -89,6 +97,5 @@
             })
         </script>
     @endif
-
 
 @endsection

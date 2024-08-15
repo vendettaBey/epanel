@@ -196,6 +196,47 @@
 </script>
 @endif
 
+<script>
+    ClassicEditor
+        .create(document.querySelector('#whyus'))
+        .then(editor => {
+            console.log('Editor was initialized', editor);
+        })
+        .catch(error => {
+            console.error('Error during initialization of the editor', error);
+        });
+</script>
+<script>
+    ClassicEditor
+        .create(document.querySelector('#vision'))
+        .then(editor => {
+            console.log('Editor was initialized', editor);
+        })
+        .catch(error => {
+            console.error('Error during initialization of the editor', error);
+        });
+</script>
+<script>
+    ClassicEditor
+        .create(document.querySelector('#mission'))
+        .then(editor => {
+            console.log('Editor was initialized', editor);
+        })
+        .catch(error => {
+            console.error('Error during initialization of the editor', error);
+        });
+</script>
+<script>
+    ClassicEditor
+        .create(document.querySelector('#address'))
+        .then(editor => {
+            console.log('Editor was initialized', editor);
+        })
+        .catch(error => {
+            console.error('Error during initialization of the editor', error);
+        });
+</script>
+
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {

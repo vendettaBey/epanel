@@ -25,16 +25,24 @@
                         </li>
                     </ul>
                 </li>
+                <li class="nav-item"> <a href="{{ route('sliders') }}" class="nav-link"> <i class="nav-icon bi bi-download"></i>
+                        <p>Slider</p>
+                    </a> 
+                </li>
                 <li class="nav-item"> <a href="{{ route('sectors') }}" class="nav-link"> <i class="nav-icon bi bi-download"></i>
-                        <p>Sektörler | Kategoriler</p>
+                        <p>Sektörler</p>
                     </a> 
                 </li>
                 <li class="nav-item"> <a href="{{ route('services') }}" class="nav-link"> <i class="nav-icon bi bi-download"></i>
                         <p>Hizmetler</p>
                     </a> 
                 </li>
-                <li class="nav-item"> <a href="#" class="nav-link"> <i class="nav-icon bi bi-download"></i>
-                        <p>Installation</p>
+                <li class="nav-item"> <a href="{{ route('branches') }}" class="nav-link"> <i class="nav-icon bi bi-download"></i>
+                        <p>Şubeler</p>
+                    </a> 
+                </li>
+                <li class="nav-item"> <a href="{{ route('blogs') }}" class="nav-link"> <i class="nav-icon bi bi-download"></i>
+                        <p>Bloglar</p>
                     </a> 
                 </li>
             </ul> <!--end::Sidebar Menu-->

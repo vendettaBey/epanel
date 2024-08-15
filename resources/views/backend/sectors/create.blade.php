@@ -17,15 +17,13 @@
                                  <label for="name" class="form-label fw-bold">Adı</label>
                                  <input type="text" class="form-control" id="name" name="name" required>
                              </div>
-
                              <div class="mb-3">
                                  <label for="description" class="form-label fw-bold">Açıklama</label>
-                                 <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+                                 <textarea class="form-control" id="desc" name="desc"></textarea>
                              </div>
                              <div class="mb-3">
                                  <label for="image" class="form-label fw-bold">Resim</label>
-                                 <input type="file" class="form-control" id="image" name="image" accept="image/*"
-                                     required>
+                                 <input type="file" class="form-control" id="image" name="image" accept="image/*">
                              </div>
                          </div>
                          <div class="card-footer">
@@ -40,3 +38,18 @@
          </div>
      </div>
  @endsection
+
+ @section('scripts')
+    <script>
+        $(document).ready(function() {
+            ClassicEditor
+        .create(document.querySelector('#desc'))
+        .then(editor => {
+            console.log('Editor was initialized', editor);
+        })
+        .catch(error => {
+            console.error('Error during initialization of the editor', error);
+        });
+        });
+    </script>
+@endsection

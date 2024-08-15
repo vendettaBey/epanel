@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Sector;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
+use Mews\Purifier\Facades\Purifier;
 
 class SectorController extends Controller
 {
@@ -29,9 +31,9 @@ class SectorController extends Controller
         ]);
 
         $sector = new Sector();
-        $sector->name = $request->name;
-        $sector->slug = Str::slug($request->name);
-        $sector->description = $request->description;
+        $sector->name = Purifier::clean($request->name);
+        $sector->slug = Str::slug(Purifier::clean($request->name));
+        $sector->description = Purifier::clean($request->desc);
 
 
         if($request->hasFile('image')) {
@@ -41,11 +43,11 @@ class SectorController extends Controller
             $sector->image = 'uploads/sectors'.$image_name;
         }
         $sector->company_id = 1;
-        $sector->user_id = auth()->user()->id;
+        $sector->user_id = Auth::user()->id;
         $sector->status = 1;
         $sector->save();
 
-        return redirect()->route('sectors')->with('success', 'Sector created successfully');
+        return redirect()->route('sectors')->with('success', 'Sektör başarıyla eklendi!');
     }
     public function edit($id)
     {
@@ -60,9 +62,9 @@ class SectorController extends Controller
         ]);
 
         $sector = Sector::find($id);
-        $sector->name = $request->name;
-        $sector->slug = Str::slug($request->name);
-        $sector->description = $request->description;
+        $sector->name = Purifier::clean($request->name);
+        $sector->slug = Str::slug(Purifier::clean($request->name));
+        $sector->description = $request->desc;
 
         if($request->hasFile('image')) {
             $image = $request->file('image');
@@ -71,11 +73,11 @@ class SectorController extends Controller
             $sector->image = 'uploads/sectors'.$image_name;
         }
         $sector->company_id = 1;
-        $sector->user_id = auth()->user()->id;
+        $sector->user_id = Auth::user()->id;
         $sector->status = 1;
         $sector->save();
 
-        return redirect()->route('sectors')->with('success', 'Sector updated successfully');
+        return redirect()->route('sectors')->with('success', 'Sektör başarıyla güncellendi');
     }
 
     public function destroy($id)
@@ -85,10 +87,19 @@ class SectorController extends Controller
             unlink($sector->image);
         }
         $sector->delete();
-        return redirect()->route('sectors')->with('success', 'Sector deleted successfully');
+        return redirect()->route('sectors')->with('success', 'Sektör başarıyla silindi');
     }
 
-
+    public function status($id){
+        $sector = Sector::find($id);
+        if($sector->status == 1){
+            $sector->status = 0;
+        }else{
+            $sector->status = 1;
+        }
+        $sector->save();
+        return redirect()->route('sectors')->with('success', 'Sektör başarıyla güncellendi');
+    }
 
 
 

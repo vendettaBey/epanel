@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'serviceler')
+@section('title', 'Hizmetler')
 
 @section('content')
     <div class="container-fluid">
@@ -28,7 +28,7 @@
                                         <tr>
                                             <td>{{ $service->id }}</td>
                                             <td>{{ $service->name }}</td>
-                                            <td>{{ $service->description }}</td>
+                                            <td>{!! $service->description !!}</td>
                                             <td>
                                                 @if($service->status == 1)
                                                     <span class="badge bg-success">Aktif</span>
@@ -39,6 +39,7 @@
                                             <td>
                                                 <a href="{{ route('services.edit', $service->id) }}"><button type="button" class="btn btn-primary btn-sm">Düzenle</button></a>
                                                 <a href="{{ route('services.destroy', $service->id) }}" onclick="return confirm('Silmek istediğinize emin misiniz?')"><button type="button" class="btn btn-danger btn-sm">Sil</button></a>
+                                                <a href="{{ route('services.status', $service->id) }}"><button type="button" class="btn @if($service->status == 1)btn-danger @else btn-success @endif btn-sm">@if($service->status == 1)Pasif @else Aktif @endif</button></a>
                                             </td>
                                         </tr>
                                     @endforeach

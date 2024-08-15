@@ -1,10 +1,14 @@
 <?php
 
+use App\Http\Controllers\Backend\BlogController;
+use App\Http\Controllers\Backend\BlogCategoryController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Backend\BranchesController;
 use App\Http\Controllers\Backend\CompanyController;
 use App\Http\Controllers\Backend\ProfileController;
 use App\Http\Controllers\Backend\ServicesController;
 use App\Http\Controllers\Backend\SectorController;
+use App\Http\Controllers\Backend\SliderController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -48,6 +52,40 @@ Route::middleware('auth')->group(function () {
     Route::any('/services/photo/delete/{id}', [ServicesController::class,'photoDelete'])->name('services.photo.delete');
     Route::any('/services/photo/status/{id}', [ServicesController::class,'photoStatus'])->name('services.photo.status');
     Route::any('/services/photo/cover/{id}', [ServicesController::class,'photoCover'])->name('services.photo.cover');
+
+
+    Route::get('/branches',[BranchesController::class, 'index'])->name('branches');
+    Route::any('/branches/create', [BranchesController::class,'create'])->name('branches.create');
+    Route::any('/branches/store', [BranchesController::class,'store'])->name('branches.store');
+    Route::any('/branches/edit/{id}', [BranchesController::class,'edit'])->name('branches.edit');
+    Route::any('/branches/update/{id}', [BranchesController::class,'update'])->name('branches.update');
+    Route::any('/branches/destroy/{id}', [BranchesController::class,'destroy'])->name('branches.destroy');
+    Route::any('/branches/status/{id}', [BranchesController::class,'status'])->name('branches.status');
+
+    Route::get('/sliders', [SliderController::class, 'index'])->name('sliders');
+    Route::any('/sliders/create', [SliderController::class,'create'])->name('sliders.create');
+    Route::any('/sliders/store', [SliderController::class,'store'])->name('sliders.store');
+    Route::any('/sliders/edit/{id}', [SliderController::class,'edit'])->name('sliders.edit');
+    Route::any('/sliders/update/{id}', [SliderController::class,'update'])->name('sliders.update');
+    Route::any('/sliders/destroy/{id}', [SliderController::class,'destroy'])->name('sliders.destroy');
+    Route::any('/sliders/status/{id}', [SliderController::class,'status'])->name('sliders.status');
+    Route::post('/sliders/update-order', [SliderController::class, 'updateOrder'])->name('sliders.updateOrder');
+
+
+    Route::get('/blogs',[BlogController::class, 'index'])->name('blogs');
+    Route::any('/blogs/create', [BlogController::class,'create'])->name('blogs.create');
+    Route::any('/blogs/store', [BlogController::class,'store'])->name('blogs.store');
+    Route::any('/blogs/edit/{id}', [BlogController::class,'edit'])->name('blogs.edit');
+    Route::any('/blogs/update/{id}', [BlogController::class,'update'])->name('blogs.update');
+    Route::any('/blogs/destroy/{id}', [BlogController::class,'destroy'])->name('blogs.destroy');
+    Route::any('/blogs/status/{id}', [BlogController::class,'status'])->name('blogs.status');
+
+    Route::get('/blog-categories',[BlogCategoryController::class, 'index'])->name('blog-categories');
+    Route::any('/blog-categories/store', [BlogCategoryController::class,'store'])->name('blog-categories.store');
+    Route::put('/blog-categories/{category}', [BlogCategoryController::class, 'update'])->name('blog-categories.update');
+    Route::any('/blog-categories/destroy/{id}', [BlogCategoryController::class,'destroy'])->name('blog-categories.destroy');
+    Route::any('/blog-categories/status/{id}', [BlogCategoryController::class,'status'])->name('blog-categories.status');
+
 
 
 });
