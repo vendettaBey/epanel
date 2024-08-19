@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Backend\BlogController;
 use App\Http\Controllers\Backend\BlogCategoryController;
+use App\Http\Controllers\Backend\FaqController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\BranchesController;
 use App\Http\Controllers\Backend\CompanyController;
@@ -9,6 +10,8 @@ use App\Http\Controllers\Backend\ProfileController;
 use App\Http\Controllers\Backend\ServicesController;
 use App\Http\Controllers\Backend\SectorController;
 use App\Http\Controllers\Backend\SliderController;
+use App\Http\Controllers\Backend\ReferencesController;
+use App\Http\Controllers\Backend\GalleryController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -87,6 +90,26 @@ Route::middleware('auth')->group(function () {
     Route::any('/blog-categories/status/{id}', [BlogCategoryController::class,'status'])->name('blog-categories.status');
 
 
+    Route::get('/references',[ReferencesController::class, 'index'])->name('references');
+    Route::any('/references/create', [ReferencesController::class,'create'])->name('references.create');
+    Route::any('/references/store', [ReferencesController::class,'store'])->name('references.store');
+    Route::any('/references/edit/{id}', [ReferencesController::class,'edit'])->name('references.edit');
+    Route::any('/references/update/{id}', [ReferencesController::class,'update'])->name('references.update');
+    Route::any('/references/destroy/{id}', [ReferencesController::class,'destroy'])->name('references.destroy');
+    Route::any('/references/status/{id}', [ReferencesController::class,'status'])->name('references.status');
+
+    Route::get('/galleries',[GalleryController::class, 'index'])->name('galleries');
+    Route::any('/galleries/store', [GalleryController::class,'store'])->name('galleries.store');
+    Route::any('/galleries/destroy', [GalleryController::class,'destroy'])->name('galleries.destroy');
+    Route::any('/galleries/status/{id}', [GalleryController::class,'status'])->name('galleries.status');
+
+    Route::get('/faqs',[FaqController::class, 'index'])->name('faqs');
+    Route::any('/faqs/create', [FaqController::class,'create'])->name('faqs.create');
+    Route::any('/faqs/store', [FaqController::class,'store'])->name('faqs.store');
+    Route::any('/faqs/edit/{id}', [FaqController::class,'edit'])->name('faqs.edit');
+    Route::any('/faqs/update/{id}', [FaqController::class,'update'])->name('faqs.update');
+    Route::any('/faqs/destroy/{id}', [FaqController::class,'destroy'])->name('faqs.destroy');
+    Route::any('/faqs/status/{id}', [FaqController::class,'status'])->name('faqs.status');
 
 });
 

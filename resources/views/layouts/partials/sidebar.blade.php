@@ -45,6 +45,18 @@
                         <p>Bloglar</p>
                     </a> 
                 </li>
+                <li class="nav-item"> <a href="{{ route('references') }}" class="nav-link"> <i class="nav-icon bi bi-download"></i>
+                        <p>Referanslar</p>
+                    </a> 
+                </li>
+                <li class="nav-item"> <a href="{{ route('galleries') }}" class="nav-link"> <i class="nav-icon bi bi-download"></i>
+                        <p>Galeri</p>
+                    </a> 
+                </li>
+                <li class="nav-item"> <a href="{{ route('faqs') }}" class="nav-link"> <i class="nav-icon bi bi-download"></i>
+                        <p>Sıkça Sorulan Sorular / FAQ</p>
+                    </a> 
+                </li>
             </ul> <!--end::Sidebar Menu-->
         </nav>
     </div> <!--end::Sidebar Wrapper-->
