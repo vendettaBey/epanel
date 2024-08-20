@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Faq;
+use Illuminate\Support\Facades\Session;
 
 class FaqController extends Controller
 {
@@ -31,8 +32,9 @@ class FaqController extends Controller
         return redirect()->route('faqs')->with('success', 'Soru başarıyla eklendi.');
     }
 
-    public function edit(Faq $faq)
+    public function edit($id)
     {
+        $faq = Faq::where('id',$id)->firstOrFail();
         return view('backend.faqs.edit', compact('faq'));
     }
 
@@ -48,19 +50,22 @@ class FaqController extends Controller
         return redirect()->route('faqs')->with('success', 'Soru başarıyla güncellendi.');
     }
 
-    public function destroy(Faq $faq)
+    public function destroy($id)
     {
+        $faq = Faq::where('id', $id)->firstOrFail();
         $faq->delete();
 
         return redirect()->route('faqs')->with('success', 'Soru başarıyla silindi.');
     }
 
-    public function status(Faq $faq)
+    public function status($id)
     {
+        $faq = Faq::where('id', $id)->firstOrFail();
         $faq->is_active = !$faq->is_active;
         $faq->save();
 
-        return redirect()->route('faqs')->with('success', 'Soru durumu başarıyla güncellendi.');
+        Session::flash('success', 'Soru durumu başarıyla güncellendi.');
+        return redirect()->route('faqs');
     }
 
 

@@ -1,4 +1,3 @@
-<!-- resources/views/faqs/index.blade.php -->
 @extends('layouts.app')
 @section('title', 'Sıkça Sorulan Sorular')
 @section('content')
@@ -9,9 +8,6 @@
                 <a href="{{ route('faqs.create') }}" class="btn btn-primary btn-lg">Yeni Soru Ekle</a>
             </div>
             <div class="col-md-12">
-                @if(session('success'))
-                    <div class="alert alert-success">{{ session('success') }}</div>
-                @endif
                 <table class="table table-striped">
                     <thead>
                         <tr>
@@ -25,7 +21,7 @@
                         @foreach($faqs as $faq)
                             <tr>
                                 <td>{{ $faq->question }}</td>
-                                <td>{{ $faq->answer }}</td>
+                                <td>{!! $faq->answer !!}</td>
                                 <td>
                                     @if($faq->is_active)
                                         <span class="badge bg-success">Aktif</span>
@@ -34,12 +30,15 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <a href="{{ route('faqs.edit', $faq->id) }}" class="btn btn-info btn-sm">Düzenle</a>
-                                    <form action="{{ route('faqs.destroy', $faq->id) }}" method="POST" style="display:inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Silmek istediğinize emin misiniz?');">Sil</button>
-                                    </form>
+                                    <div class="d-flex justify-content-between">
+                                        <a href="{{ route('faqs.edit', $faq->id) }}" class="btn btn-info">Düzenle</a>
+                                        <form action="{{ route('faqs.destroy', $faq->id) }}" method="POST" style="display:inline;" class="delete-form">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="button" class="btn btn-danger delete-button">Sil</button>
+                                        </form>
+                                        <a href="{{ route('faqs.status', $faq->id) }}" class="btn @if($faq->is_active) btn-danger @else btn-success @endif ">@if($faq->is_active) Pasif @else Aktif @endif</a>
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach
@@ -48,4 +47,40 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('scripts')
+    @if(session('success'))
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Başarılı!',
+                text: '{{ session('success') }}',
+                showConfirmButton: false,
+                timer: 1500
+            });
+        </script>
+    @endif
+
+    <script>
+        document.querySelectorAll('.delete-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const form = this.closest('.delete-form');
+                Swal.fire({
+                    title: 'Emin misiniz?',
+                    text: "Bu işlemi geri alamazsınız!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Evet, sil!',
+                    cancelButtonText: 'Hayır, iptal et'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        });
+    </script>
 @endsection

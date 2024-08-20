@@ -30,7 +30,7 @@
 
                     <div class="form-group mb-3">
                         <label for="answer">Cevap</label>
-                        <textarea name="answer" id="answer" class="form-control" rows="4" required>{{ old('answer', $faq->answer) }}</textarea>
+                        <textarea name="answer" id="answer" class="form-control">{!! old('answer', $faq->answer) !!}</textarea>
                     </div>
 
                     <button type="submit" class="btn btn-success btn-lg">Güncelle</button>
@@ -39,4 +39,17 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('scripts')
+<script>
+    ClassicEditor
+        .create(document.querySelector('#answer'))
+        .then(editor => {
+            console.log('Editor was initialized', editor);
+        })
+        .catch(error => {
+            console.error('Error during initialization of the editor', error);
+        });
+</script>
 @endsection
