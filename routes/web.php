@@ -12,6 +12,8 @@ use App\Http\Controllers\Backend\SectorController;
 use App\Http\Controllers\Backend\SliderController;
 use App\Http\Controllers\Backend\ReferencesController;
 use App\Http\Controllers\Backend\GalleryController;
+use App\Http\Controllers\Backend\FullCalenderController;
+use App\Http\Controllers\Backend\AppointmentController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -111,6 +113,23 @@ Route::middleware('auth')->group(function () {
     Route::any('/faqs/destroy/{id}', [FaqController::class,'destroy'])->name('faqs.destroy');
     Route::any('/faqs/status/{id}', [FaqController::class,'status'])->name('faqs.status');
 
+
+    Route::get('/appointments', [AppointmentController::class, 'index'])->name('appointments.index');
+    Route::get('/appointments/create', [AppointmentController::class, 'create'])->name('appointments.create');
+    Route::post('/appointments', [AppointmentController::class, 'store'])->name('appointments.store');
+    Route::get('/appointments/{appointment}/edit', [AppointmentController::class, 'edit'])->name('appointments.edit');
+    Route::put('/appointments/{appointment}', [AppointmentController::class, 'update'])->name('appointments.update');
+    Route::delete('/appointments/{appointment}', [AppointmentController::class, 'destroy'])->name('appointments.destroy');
+    Route::get('/appointments/settings', [AppointmentController::class, 'settings'])->name('appointments.settings');
+    Route::post('/appointments/settings', [AppointmentController::class, 'updateSettings'])->name('appointments.updateSettings');
+    Route::get('/appointments/available-slots', [AppointmentController::class, 'getAvailableSlots'])->name('appointments.getAvailableSlots');
+    Route::post('/appointments/toggle-status/{day}', [AppointmentController::class, 'toggleStatus'])->name('appointments.toggleStatus');
+
+
 });
+
+
+Route::get('/fullcalender', [FullCalenderController::class, 'index']);
+Route::post('/fullcalenderAjax', [FullCalenderController::class, 'ajax']);
 
 require __DIR__.'/auth.php';
