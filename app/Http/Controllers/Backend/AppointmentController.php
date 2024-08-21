@@ -7,6 +7,7 @@ use App\Models\Appointment;
 use App\Models\AppointmentSetting;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class AppointmentController extends Controller
 {
@@ -28,30 +29,44 @@ class AppointmentController extends Controller
     // 3. Randevu Kaydetme
     public function store(Request $request)
     {
+        // Validasyon işlemleri
         $request->validate([
             'client_name' => 'required|string|max:255',
-            'day_of_week' => 'required|string|in:Pazartesi,Salı,Çarşamba,Perşembe,Cuma,Cumartesi,Pazar',
-            'start_time' => 'required|date_format:H:i',
-            'end_time' => 'required|date_format:H:i|after:start_time',
+            'client_phone' => 'required|string|max:255',
+            'date' => 'required|date',
+            'start_time' => 'required',
+            'day_of_week' => 'required|string',
         ]);
 
-        $setting = AppointmentSetting::where('day_of_week', $request->day_of_week)->where('status', true)->first();
+        // Seçilen gün için AppointmentSetting tablosundan time_slot değerini alın
+        $appointmentSetting = AppointmentSetting::where('day_of_week', $request->day_of_week)->first();
 
-        if (!$setting) {
-            return redirect()->back()->withErrors(['day_of_week' => 'Seçilen gün için randevu alınamaz, çünkü bu gün pasif durumda.']);
+        if (!$appointmentSetting) {
+            return redirect()->back()->withErrors(['day_of_week' => 'Seçilen gün için bir randevu ayarı bulunamadı.']);
         }
 
-        $startDateTime = Carbon::parse($request->start_time);
-        $endDateTime = Carbon::parse($request->end_time);
+        // Tarih ve zamanı birleştir
+        $startDateTime = Carbon::createFromFormat('Y-m-d H:i', $request->date . ' ' . $request->start_time);
 
+        // End time hesaplama
+        $endDateTime = $startDateTime->copy()->addMinutes($appointmentSetting->time_slot);
+
+        // Randevuyu veritabanına kaydetme
         Appointment::create([
             'client_name' => $request->client_name,
+            'client_phone' => $request->client_phone,
+            'message' => $request->note,
+            'client_email' => $request->client_email,
             'start_time' => $startDateTime->toDateTimeString(),
             'end_time' => $endDateTime->toDateTimeString(),
+            'day_of_week' => $request->day_of_week,
         ]);
 
         return redirect()->route('appointments.index')->with('success', 'Randevu başarıyla oluşturuldu.');
     }
+
+
+
 
     // 4. Randevu Düzenleme Sayfası
     public function edit(Appointment $appointment)
@@ -111,12 +126,14 @@ class AppointmentController extends Controller
                 'start_time' => $setting['start_time'],
                 'end_time' => $setting['end_time'],
                 'time_slot' => $setting['time_slot'],
-                'status' => isset($setting['status']) ? true : false,
+                'break_start_time' => $setting['break_start_time'],
+                'break_end_time' => $setting['break_end_time'],
             ]);
         }
-    
-        return redirect()->route('appointments.settings')->with('success', 'Randevu ayarları başarıyla güncellendi.');
+
+        return redirect()->back()->with('success', 'Randevu ayarları başarıyla güncellendi.');
     }
+
 
     public function toggleStatus(Request $request, $day)
     {
@@ -131,34 +148,75 @@ class AppointmentController extends Controller
     }
 
 
+
     // 9. Boş Saat Dilimlerini Getirme
     public function getAvailableSlots(Request $request)
     {
         $dayOfWeek = $request->day_of_week;
         $date = $request->date;
 
-        $setting = AppointmentSetting::where('day_of_week', $dayOfWeek)->firstOrFail();
+        Log::info("Requested day of week: $dayOfWeek and date: $date");
+
+        // Seçilen gün için ayarları getir
+        $setting = AppointmentSetting::where('day_of_week', $dayOfWeek)->where('status', true)->first();
+
+        if (!$setting) {
+            Log::info("No setting found for the requested day of week: $dayOfWeek");
+            return response()->json([]);
+        }
+
+        Log::info("Setting found: " . json_encode($setting));
+
         $startTime = Carbon::parse($setting->start_time);
         $endTime = Carbon::parse($setting->end_time);
+        $breakStartTime = Carbon::parse($setting->break_start_time);
+        $breakEndTime = Carbon::parse($setting->break_end_time);
         $timeSlot = $setting->time_slot;
 
         $slots = [];
-        while ($startTime->lessThan($endTime)) {
-            $slotEndTime = $startTime->copy()->addMinutes($timeSlot);
-            $isBooked = Appointment::where('start_time', $startTime)
-                                    ->where('end_time', $slotEndTime)
-                                    ->exists();
+        $currentTime = $startTime->copy();
 
-            if (!$isBooked) {
+        // Tüm potansiyel zaman dilimlerini oluştur ve mola saatlerini dışarıda bırak
+        while ($currentTime->lessThan($endTime)) {
+            $slotEndTime = $currentTime->copy()->addMinutes($timeSlot);
+
+            // Mola kontrolü
+            if (!($currentTime->between($breakStartTime, $breakEndTime) || $slotEndTime->between($breakStartTime, $breakEndTime))) {
                 $slots[] = [
-                    'start_time' => $startTime->format('H:i'),
-                    'end_time' => $slotEndTime->format('H:i')
+                    'start_time' => $currentTime->format('H:i'),
+                    'end_time' => $slotEndTime->format('H:i'),
                 ];
             }
 
-            $startTime->addMinutes($timeSlot);
+            $currentTime->addMinutes($timeSlot);
+
+            // Sonsuz döngü olup olmadığını kontrol et
+            if ($currentTime->gte($endTime)) {
+                break;
+            }
         }
+
+
+        Log::info("Available slots: " . json_encode($slots));
 
         return response()->json($slots);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
