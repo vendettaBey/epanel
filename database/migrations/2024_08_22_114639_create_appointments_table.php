@@ -14,11 +14,11 @@ return new class extends Migration
         Schema::create('appointments', function (Blueprint $table) {
             $table->id();
             $table->string('client_name');
-            $table->string('client_email');
             $table->string('client_phone');
-            $table->text('message');
-            $table->dateTime('start_time');
-            $table->dateTime('end_time');
+            $table->string('client_email')->nullable();
+            $table->date('date'); // Randevu tarihi
+            $table->foreignId('slot_id')->constrained()->onDelete('cascade'); // Slot ile ilişki
+            $table->enum('status', ['booked', 'canceled'])->default('booked'); // Randevu durumu
             $table->timestamps();
         });
     }

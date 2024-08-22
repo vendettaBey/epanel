@@ -61,6 +61,10 @@
                         <p>Randevu Sistemi</p>
                     </a> 
                 </li>
+                <li class="nav-item"> <a href="{{ route('slots.index') }}" class="nav-link"> <i class="nav-icon bi bi-download"></i>
+                        <p>Slot Yönetimi</p>
+                    </a> 
+                </li>
             </ul> <!--end::Sidebar Menu-->
         </nav>
     </div> <!--end::Sidebar Wrapper-->

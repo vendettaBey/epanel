@@ -14,7 +14,7 @@ use App\Http\Controllers\Backend\ReferencesController;
 use App\Http\Controllers\Backend\GalleryController;
 use App\Http\Controllers\Backend\FullCalenderController;
 use App\Http\Controllers\Backend\AppointmentController;
-
+use App\Http\Controllers\Backend\SlotController;
 Route::get('/', function () {
     return view('welcome');
 });
@@ -124,6 +124,17 @@ Route::middleware('auth')->group(function () {
     Route::post('/appointments/settings', [AppointmentController::class, 'updateSettings'])->name('appointments.updateSettings');
     Route::get('/appointments/available-slots', [AppointmentController::class, 'getAvailableSlots'])->name('appointments.getAvailableSlots');
     Route::post('/appointments/toggle-status/{day}', [AppointmentController::class, 'toggleStatus'])->name('appointments.toggleStatus');
+
+
+    Route::get('/appointments/slots', [AppointmentController::class, 'getSlots'])->name('appointments.getSlots');
+
+
+    Route::resource('slots', SlotController::class);
+    Route::post('/slots/create', [SlotController::class, 'create'])->name('slots.create');
+    Route::post('/slots/store', [SlotController::class, 'store'])->name('slots.store');
+
+    // Slotların durumunu değiştirmek için özel bir route
+    Route::post('slots/{slot}/toggle-status', [SlotController::class, 'toggleStatus'])->name('slots.toggle-status');
 
 
 });

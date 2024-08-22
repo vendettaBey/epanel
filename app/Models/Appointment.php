@@ -8,5 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Appointment extends Model
 {
     use HasFactory;
+
     protected $guarded = [];
+
+    public function slot()
+    {
+        return $this->belongsTo(Slot::class);
+    }
 }
