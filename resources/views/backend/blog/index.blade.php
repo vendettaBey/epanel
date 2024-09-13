@@ -4,12 +4,12 @@
 
 @section('content')
 
-    <div class="container-fluid">
+    <div class="container-fluid mt-5">
         <div class="row">
+            <h3 class="fw-bold">Bloglar</h3>
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">Bloglar</h3>
                         <div class="d-flex justify-content-end">
                             <a href="{{ route('blogs.create') }}">
                                 <button type="button" class="btn btn-primary me-5 btn-lg">Yeni Blog Ekle</button>
@@ -18,7 +18,7 @@
                                 <button type="button" class="btn btn-success btn-lg">Blog Kategorileri</button>
                             </a>
                         </div>
-                        
+
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -43,35 +43,47 @@
                                             <td>{{ $blog->author }}</td>
                                             <td>{{ $blog->time }}</td>
                                             <td>
-                                                @if($blog->image)
-                                                    <img src="{{ asset($blog->image) }}" alt="{{ $blog->image }}" class="img-thumbnail" style="width: 100px;">
+                                                @if ($blog->image)
+                                                    <img src="{{ asset($blog->image) }}" alt="{{ $blog->image }}"
+                                                        class="img-thumbnail" style="width: 100px;">
                                                 @endif
                                             </td>
                                             <td>
-                                                
+
                                                 @php
-                                                    if($blog->tags != null && $blog->tags != ""){
-                                                        $categoryIds = explode(',',$blog->tags) ?? [];
+                                                    if ($blog->tags != null && $blog->tags != '') {
+                                                        $categoryIds = explode(',', $blog->tags) ?? [];
                                                         if (!empty($categoryIds)) {
-                                                            $categoryNames = \App\Models\BlogCategory::whereIn('id', $categoryIds)->pluck('name')->toArray();
+                                                            $categoryNames = \App\Models\BlogCategory::whereIn(
+                                                                'id',
+                                                                $categoryIds,
+                                                            )
+                                                                ->pluck('name')
+                                                                ->toArray();
                                                             foreach ($categoryNames as $key => $value) {
-                                                                echo "#".$value."<br>";
+                                                                echo '#' . $value . '<br>';
                                                             }
                                                         }
-                                                    }else{
-                                                        echo "Kategori Bulunamadı";
+                                                    } else {
+                                                        echo 'Kategori Bulunamadı';
                                                     }
                                                 @endphp
-                                                
+
                                             </td>
                                             <td>{!! Str::limit(strip_tags($blog->content), 50, '...') !!}</td>
                                             <td>
                                                 <a href="{{ route('blogs.edit', $blog->id) }}">
                                                     <button type="button" class="btn btn-primary btn-sm">Düzenle</button>
                                                 </a>
-                                                <button type="button" class="btn btn-danger btn-sm" onclick="deleteBlog({{ $blog->id }})">Sil</button>
-                                                <button type="button" class="btn btn-info btn-sm" onclick="toggleStatus({{ $blog->id }})">
-                                                    @if($blog->status) Pasif Yap @else Aktif Yap @endif
+                                                <button type="button" class="btn btn-danger btn-sm"
+                                                    onclick="deleteBlog({{ $blog->id }})">Sil</button>
+                                                <button type="button" class="btn btn-info btn-sm"
+                                                    onclick="toggleStatus({{ $blog->id }})">
+                                                    @if ($blog->status)
+                                                        Pasif Yap
+                                                    @else
+                                                        Aktif Yap
+                                                    @endif
                                                 </button>
                                             </td>
                                         </tr>
@@ -110,7 +122,7 @@
                         data: {
                             _token: '{{ csrf_token() }}',
                         },
-                        success: function (response) {
+                        success: function(response) {
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Başarılı!',
@@ -121,7 +133,7 @@
                                 location.reload();
                             });
                         },
-                        error: function () {
+                        error: function() {
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Hata!',
@@ -141,7 +153,7 @@
                 data: {
                     _token: '{{ csrf_token() }}',
                 },
-                success: function (response) {
+                success: function(response) {
                     Swal.fire({
                         icon: 'success',
                         title: 'Başarılı!',
@@ -152,7 +164,7 @@
                         location.reload();
                     });
                 },
-                error: function () {
+                error: function() {
                     Swal.fire({
                         icon: 'error',
                         title: 'Hata!',

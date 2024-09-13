@@ -3,15 +3,15 @@
 @section('title', 'Sektörler')
 
 @section('content')
-    <div class="container-fluid">
+    <div class="container-fluid mt-5">
         <div class="row">
             <div class="col-md-12">
+                <h3 class="fw-bold">Sektörler</h3>
+                <br>
                 <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Sektörler</h3>
-                        <a href="{{ route('sectors.create') }}"><button type="button" class="btn btn-primary float-end">Yeni
-                                Sektör Ekle</button></a>
-                    </div>
+                    <a href="{{ route('sectors.create') }}">
+                        <button type="button" class="btn btn-primary float-end">Yeni Sektör Ekle</button>
+                    </a>
                     <div class="card-body">
                         <div class="table-responsive">
                             <table id="dataTable" class="table table-bordered table-hover table-striped">

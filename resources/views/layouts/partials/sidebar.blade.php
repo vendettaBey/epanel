@@ -37,6 +37,10 @@
                         <p>Hizmetler</p>
                     </a> 
                 </li>
+                <li class="nav-item"> <a href="{{ route('employees.index') }}" class="nav-link"> <i class="nav-icon bi bi-download"></i>
+                        <p>Çalışanlar</p>
+                    </a> 
+                </li>
                 <li class="nav-item"> <a href="{{ route('branches') }}" class="nav-link"> <i class="nav-icon bi bi-download"></i>
                         <p>Şubeler</p>
                     </a> 

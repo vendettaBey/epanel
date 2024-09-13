@@ -11,37 +11,58 @@ class AppointmentController extends Controller
 {
     public function index()
     {
-        $appointments = Appointment::with('slot')->get();
+        // Get all appointments with the related slot data
+        $appointments = Appointment::with('slot.employee')->get();
+
         return view('backend.appointments.index', compact('appointments'));
     }
 
-    public function create()
+    public function selectSlot()
     {
-        return view('backend.appointments.create');
+        // Slotları çek ve hem çalışan hem de tarihe göre gruplandır
+        $slots = Slot::with('employee')
+            ->orderBy('end_date')
+            ->get()
+            ->groupBy(function ($slot) {
+                return $slot->employee->name; // Çalışana göre gruplandır
+            })->map(function ($employeeSlots) {
+                return $employeeSlots->groupBy('end_date'); // Tarihe göre gruplandır
+            });
+
+        return view('backend.appointments.select-slot', compact('slots'));
+    }
+
+
+    public function create(Slot $slot)
+    {
+        return view('backend.appointments.create', compact('slot'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'client_name' => 'required|string|max:255',
-            'client_phone' => 'required|string|max:255',
-            'date' => 'required|date',
             'slot_id' => 'required|exists:slots,id',
+            'client_name' => 'required|string|max:255',
+            'client_phone' => 'required|string|max:15',
+            'description' => 'nullable|string',
         ]);
 
-        $slot = Slot::where('id', $request->slot_id)->first();
-        $slot->status = false;
-        $slot->save();
-
+        // Create a new appointment
         Appointment::create([
+            'slot_id' => $request->slot_id,
             'client_name' => $request->client_name,
             'client_phone' => $request->client_phone,
-            'date' => $request->date,
-            'slot_id' => $request->slot_id,
+            'description' => $request->description,
         ]);
+
+        // Update the slot status to occupied
+        $slot = Slot::find($request->slot_id);
+        $slot->status = 1;
+        $slot->save();
 
         return redirect()->route('appointments.index')->with('success', 'Randevu başarıyla oluşturuldu.');
     }
+
 
     public function edit(Appointment $appointment)
     {
@@ -52,46 +73,26 @@ class AppointmentController extends Controller
     {
         $request->validate([
             'client_name' => 'required|string|max:255',
-            'client_phone' => 'required|string|max:255',
-            'date' => 'required|date',
-            'slot_id' => 'required|exists:slots,id',
+            'client_phone' => 'required|string|max:15',
+            'description' => 'nullable|string',
         ]);
 
-        $appointment->update($request->all());
+        // Update the appointment details
+        $appointment->update([
+            'client_name' => $request->client_name,
+            'client_phone' => $request->client_phone,
+            'description' => $request->description,
+        ]);
 
         return redirect()->route('appointments.index')->with('success', 'Randevu başarıyla güncellendi.');
     }
 
+
     public function destroy(Appointment $appointment)
     {
         $appointment->delete();
-
+    
         return redirect()->route('appointments.index')->with('success', 'Randevu başarıyla silindi.');
     }
-
-    public function getSlotsForDate(Request $request)
-    {
-        $date = $request->input('date');
-        $dayOfWeek = date('l', strtotime($date));
-
-        $slots = Slot::where('day_of_week', $dayOfWeek)
-            ->where('status', true)
-            ->get();
-
-        return response()->json($slots);
-    }
-
-    public function getSlots(Request $request)
-{
-    $date = $request->input('date');
-
-    if (!$date) {
-        return response()->json(['error' => 'Date is required'], 400);
-    }
-
-    $slots = Slot::whereDate('date', $date)->get();
-
-    return response()->json($slots);
-}
 
 }

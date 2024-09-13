@@ -16,5 +16,13 @@ class Slot extends Model
         return $this->hasMany(Appointment::class);
     }
 
+    protected $casts = [
+        'work_days' => 'array',
+    ];
+
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class);
+    }
 
 }

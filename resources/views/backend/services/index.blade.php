@@ -4,11 +4,11 @@
 
 @section('content')
     <div class="container-fluid">
-        <div class="row">
+        <div class="row mt-5">
+            <h3 class="fw-bold">Hizmetler</h3>
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">Hizmetler</h3>
                         <a href="{{ route('services.create') }}"><button type="button" class="btn btn-primary float-end">Yeni Hizmet Ekle</button></a>
                     </div>
                     <div class="card-body">

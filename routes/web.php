@@ -15,6 +15,7 @@ use App\Http\Controllers\Backend\GalleryController;
 use App\Http\Controllers\Backend\FullCalenderController;
 use App\Http\Controllers\Backend\AppointmentController;
 use App\Http\Controllers\Backend\SlotController;
+use App\Http\Controllers\Backend\EmployeesController;
 Route::get('/', function () {
     return view('welcome');
 });
@@ -114,28 +115,46 @@ Route::middleware('auth')->group(function () {
     Route::any('/faqs/status/{id}', [FaqController::class,'status'])->name('faqs.status');
 
 
+    // Route::get('/appointments', [AppointmentController::class, 'index'])->name('appointments.index');
+    // Route::get('/appointments/create', [AppointmentController::class, 'create'])->name('appointments.create');
+    // Route::post('/appointments', [AppointmentController::class, 'store'])->name('appointments.store');
+    // Route::get('/appointments/{appointment}/edit', [AppointmentController::class, 'edit'])->name('appointments.edit');
+    // Route::put('/appointments/{appointment}', [AppointmentController::class, 'update'])->name('appointments.update');
+    // Route::delete('/appointments/{appointment}', [AppointmentController::class, 'destroy'])->name('appointments.destroy');
+    // Route::get('/appointments/settings', [AppointmentController::class, 'settings'])->name('appointments.settings');
+    // Route::post('/appointments/settings', [AppointmentController::class, 'updateSettings'])->name('appointments.updateSettings');
+    // Route::get('/appointments/available-slots', [AppointmentController::class, 'getAvailableSlots'])->name('appointments.getAvailableSlots');
+    // Route::post('/appointments/toggle-status/{day}', [AppointmentController::class, 'toggleStatus'])->name('appointments.toggleStatus');
+
+
+    // Route::get('/appointments/slots', [AppointmentController::class, 'getSlots'])->name('appointments.getSlots');
+
+
     Route::get('/appointments', [AppointmentController::class, 'index'])->name('appointments.index');
-    Route::get('/appointments/create', [AppointmentController::class, 'create'])->name('appointments.create');
-    Route::post('/appointments', [AppointmentController::class, 'store'])->name('appointments.store');
     Route::get('/appointments/{appointment}/edit', [AppointmentController::class, 'edit'])->name('appointments.edit');
     Route::put('/appointments/{appointment}', [AppointmentController::class, 'update'])->name('appointments.update');
     Route::delete('/appointments/{appointment}', [AppointmentController::class, 'destroy'])->name('appointments.destroy');
-    Route::get('/appointments/settings', [AppointmentController::class, 'settings'])->name('appointments.settings');
-    Route::post('/appointments/settings', [AppointmentController::class, 'updateSettings'])->name('appointments.updateSettings');
-    Route::get('/appointments/available-slots', [AppointmentController::class, 'getAvailableSlots'])->name('appointments.getAvailableSlots');
-    Route::post('/appointments/toggle-status/{day}', [AppointmentController::class, 'toggleStatus'])->name('appointments.toggleStatus');
+
+    Route::get('/appointments/create/{slot}', [AppointmentController::class, 'create'])->name('appointments.create');
+    Route::post('/appointments/store', [AppointmentController::class, 'store'])->name('appointments.store');
 
 
-    Route::get('/appointments/slots', [AppointmentController::class, 'getSlots'])->name('appointments.getSlots');
+    Route::get('/appointments/create-no-slot', [AppointmentController::class, 'selectSlot'])->name('appointments.createNoSlot');
 
 
-    Route::resource('slots', SlotController::class);
-    Route::post('/slots/create', [SlotController::class, 'create'])->name('slots.create');
-    Route::post('/slots/store', [SlotController::class, 'store'])->name('slots.store');
 
-    // Slotların durumunu değiştirmek için özel bir route
-    Route::post('slots/{slot}/toggle-status', [SlotController::class, 'toggleStatus'])->name('slots.toggle-status');
+    Route::get('/slots/create', [SlotController::class, 'create'])->name('slots.create');
+    Route::post('/slots', [SlotController::class, 'store'])->name('slots.store');
+    Route::get('/slots', [SlotController::class, 'index'])->name('slots.index');
+    Route::get('/slots/{slot}/edit', [SlotController::class, 'edit'])->name('slots.edit');
+    Route::put('/slots/{slot}', [SlotController::class, 'update'])->name('slots.update');
+    Route::delete('/slots/{slot}', [SlotController::class, 'destroy'])->name('slots.destroy');
 
+    Route::get('/slots/{employee_id}', [SlotController::class, 'getEmployeeSlots'])->name('slots.getEmployeeSlots');
+
+
+
+    Route::resource('employees', EmployeesController::class);
 
 });
 

@@ -6,16 +6,15 @@
 @endsection
 @section('content')
 
-    <div class="container-fluid">
+    <div class="container-fluid mt-5">
         <div class="row">
             <div class="col-md-12">
+                <h3 class="fw-bold">Sliders</h3>
                 <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Sliders</h3>
+                    
                         <a href="{{ route('sliders.create') }}">
                             <button type="button" class="btn btn-primary float-end">Yeni Slider Ekle</button>
                         </a>
-                    </div>
                     <div class="card-body">
                         <div class="table-responsive">
                             <table id="sliderTable" class="table table-bordered table-hover table-striped">

@@ -3,12 +3,12 @@
 @section('title', 'Şubeler')
 
 @section('content')
-    <div class="container-fluid">
+    <div class="container-fluid mt-5">
         <div class="row">
+            <h3 class="fw-bold">Şubeler</h3>
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">Şubeler</h3>
                         <a href="{{ route('branches.create') }}"><button type="button" class="btn btn-primary float-end">Yeni
                                 Şube Ekle</button></a>
                     </div>
@@ -36,7 +36,7 @@
                                             <td>{{ $branch->phone }}</td>
                                             <td>{{ $branch->email }}</td>
                                             <td>
-                                                @if($branch->status == 1)
+                                                @if ($branch->status == 1)
                                                     <span class="badge bg-success">Aktif</span>
                                                 @else
                                                     <span class="badge bg-danger">Pasif</span>
@@ -48,9 +48,16 @@
                                             <td>
                                                 <a href="{{ route('branches.edit', $branch->id) }}"><button type="button"
                                                         class="btn btn-primary btn-sm">Düzenle</button></a>
-                                                <button type="button" class="btn btn-danger btn-sm" onclick="deleteBranch({{ $branch->id }})">Sil</button>
+                                                <button type="button" class="btn btn-danger btn-sm"
+                                                    onclick="deleteBranch({{ $branch->id }})">Sil</button>
                                                 <a href="{{ route('branches.status', $branch->id) }}"><button type="button"
-                                                        class="btn @if($branch->status == 1)btn-danger @else btn-success @endif btn-sm">@if($branch->status == 1)Pasif @else Aktif @endif</button></a>
+                                                        class="btn @if ($branch->status == 1) btn-danger @else btn-success @endif btn-sm">
+                                                        @if ($branch->status == 1)
+                                                            Pasif
+                                                        @else
+                                                            Aktif
+                                                        @endif
+                                                    </button></a>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -86,7 +93,7 @@
         }
     </script>
 
-    @if(session('success'))
+    @if (session('success'))
         <script>
             Swal.fire({
                 icon: 'success',

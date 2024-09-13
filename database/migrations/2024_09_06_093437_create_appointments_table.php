@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('appointment_settings', function (Blueprint $table) {
+        Schema::create('appointments', function (Blueprint $table) {
             $table->id();
-            $table->enum('day_of_week', ['Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi', 'Pazar']);
-            $table->time('start_time');
-            $table->time('end_time');
-            $table->integer('time_slot'); // Randevu aralığı (dakika cinsinden)
+            $table->foreignId('slot_id')->constrained()->onDelete('cascade'); // Associate with the slot
+            $table->string('client_name');
+            $table->string('client_phone');
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('appointment_settings');
+        Schema::dropIfExists('appointments');
     }
 };

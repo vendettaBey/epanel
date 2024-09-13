@@ -13,13 +13,14 @@ return new class extends Migration
     {
         Schema::create('slots', function (Blueprint $table) {
             $table->id();
-            $table->string('day_of_week'); // Pazartesi, Salı vb.
-            $table->time('start_time');
-            $table->time('end_time');
-            $table->integer('interval')->default(20); // Dakika cinsinden slot aralığı
-            $table->time('break_start')->nullable(); // Mola başlangıç saati
-            $table->time('break_end')->nullable();   // Mola bitiş saati
-            $table->boolean('status')->default(true); // Slot aktif mi pasif mi
+            $table->foreignId('employee_id')->constrained()->onDelete('cascade'); // Link to employee
+            $table->json('work_days'); // Store selected work days as a JSON array
+            $table->time('start_time'); // Workday start time
+            $table->time('end_time'); // Workday end time
+            $table->integer('time_slot'); // Slot interval in minutes
+            $table->time('break_start_time')->nullable(); // Optional break start time
+            $table->time('break_end_time')->nullable(); // Optional break end time
+            $table->date('end_date'); // Apply slot setup until this date
             $table->timestamps();
         });
     }
